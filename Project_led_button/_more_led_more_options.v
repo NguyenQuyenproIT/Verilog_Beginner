@@ -42,21 +42,25 @@ reg button3_last;
             button3_last <= 1;
         end else begin
             if(button2_last == 1 && button[2] == 0) begin // khi nhấn thì đổi trạng thái on/offs
-                blink_en <= ~blink_en;
+                blink_en <= 1'b1;
+                shift_en <= 1'b0;
+                led <= 4'b1111;
             end
             button2_last <= button[2]; // gán trạng thái cũ
 
             if(button3_last == 1 && button[3] == 0) begin // on-off
-                shift_en <= ~shift_en;
+                shift_en <= 1'b1;
+                blink_en <= 1'b0;
+                led <= 4'b1110;
             end
             button3_last <= button[3]; // old state
         end
-    end
+//    end
 
 
 
-    // Điều khiển LED
-    always @(posedge clk) begin
+     //////Điều khiển LED
+//    always @(posedge clk) begin
         if(!rst) begin 
             led <= 4'b1111; // reset => led off
         end else begin
@@ -75,7 +79,7 @@ reg button3_last;
                    end
             end
             else if(shift_en && active) begin // SHIFT
-                led <= {~led[0], led[3:1]};
+                led <= {led[0], led[3:1]};
             end
         end
     end
